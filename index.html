@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gender Integration MIS - APC Program</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .info-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+        
+        .info-card p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6c757d;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            min-width: 120px;
+        }
+        
+        .tab:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+        
+        .tab.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+            background: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .theme-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .theme-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .save-btn, .load-btn, .export-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .save-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            box-shadow: 0 3px 10px rgba(40,167,69,0.3);
+        }
+        
+        .load-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            box-shadow: 0 3px 10px rgba(0,123,255,0.3);
+        }
+        
+        .export-btn {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            box-shadow: 0 3px 10px rgba(111,66,193,0.3);
+        }
+        
+        .save-btn:hover, .load-btn:hover, .export-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .excel-table th {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .excel-table td {
+            padding: 10px 8px;
+            border: 1px solid #e9ecef;
+            background: white;
+        }
+        
+        .excel-table tr:nth-child(even) td {
+            background: #f8f9fa;
+        }
+        
+        .excel-table tr:hover td {
+            background: #e3f2fd;
+            transition: background 0.2s ease;
+        }
+        
+        .indicator-category {
+            background: #007bff;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .input-field {
+            border: 1px solid #ddd;
+            padding: 5px;
+            width: 100%;
+            border-radius: 3px;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-saved {
+            background: #28a745;
+        }
+        
+        .status-unsaved {
+            background: #dc3545;
+        }
+        
+        .status-modified {
+            background: #ffc107;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+            margin: 0;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin: 5px 0 0 0;
+        }
+        
+        .database-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .saved-records {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background: white;
+        }
+        
+        .record-item {
+            padding: 10px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .record-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .record-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 11px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .btn-edit {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .notification.success {
+            background: #28a745;
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .excel-table {
+                font-size: 10px;
+            }
+            
+            .excel-table th,
+            .excel-table td {
+                padding: 8px 4px;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                min-width: 100px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="notification" class="notification"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Gender Integration MIS</h1>
+            <p>Maa Gramdevi PG, Charbhati Village | APC Program Monitoring with Database</p>
+        </div>
+        
+        <div class="info-cards">
+            <div class="info-card">
+                <h3>PG Members</h3>
+                <p>164 Total Members</p>
+            </div>
+            <div class="info-card">
+                <h3>Location</h3>
+                <p>Jharsuguda Sadar Block</p>
+            </div>
+            <div class="info-card">
+                <h3>Implementation</h3>
+                <p>AJKA Partnership</p>
+            </div>
+            <div class="info-card">
+                <h3>Timeline</h3>
+                <p>July 2025 - July 2026</p>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="openTab(event, 'agriculture')">Agriculture</button>
+            <button class="tab" onclick="openTab(event, 'livestock')">Livestock</button>
+            <button class="tab" onclick="openTab(event, 'valuechain')">Value Chain</button>
+            <button class="tab" onclick="openTab(event, 'governance')">Governance</button>
+            <button class="tab" onclick="openTab(event, 'irrigation')">Irrigation</button>
+            <button class="tab" onclick="openTab(event, 'plantation')">Plantation</button>
+            <button class="tab" onclick="openTab(event, 'fpc')">FPC</button>
+            <button class="tab" onclick="openTab(event, 'pg')">PG</button>
+            <button class="tab" onclick="openTab(event, 'income')">Income Control</button>
+            <button class="tab" onclick="openTab(event, 'assets')">Asset Control</button>
+            <button class="tab" onclick="openTab(event, 'database')">Database</button>
+            <button class="tab" onclick="openTab(event, 'summary')">Summary</button>
+        </div>
+        
+        <!-- Agriculture Theme -->
+        <div id="agriculture" class="tab-content active">
+            <div class="theme-header">
+                <h2><span class="status-indicator status-unsaved" id="agriculture-status"></span>Agriculture Theme - Gender Integration Tracking</h2>
+                <div class="theme-actions">
+                    <button class="save-btn" onclick="saveThemeData('agriculture')">Save Data</button>
+                    <button class="load-btn" onclick="loadThemeData('agriculture')">Load Data</button>
+                    <button class="export-btn" onclick="exportThemeData('agriculture')">Export Excel</button>
+                </div>
+            </div>
+            <table class="excel-table" id="agriculture-table">
+                <thead>
+                    <tr>
+                        <th>Indicator Category</th>
+                        <th>Specific Indicator</th>
+                        <th>Baseline (Men)</th>
+                        <th>Baseline (Women)</th>
+                        <th>Current (Men)</th>
+                        <th>Current (Women)</th>
+                        <th>Target (Men)</th>
+                        <th>Target (Women)</th>
+                        <th>Data Source</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="indicator-category" rowspan="4">Land Access & Control</td>
+                        <td>% of PG members with land ownership documents</td>
+                        <td><input type="number" class="input-field" data-field="agri_land_ownership_men_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_land_ownership_women_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_land_ownership_men_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_land_ownership_women_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_land_ownership_men_target" value="80" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_land_ownership_women_target" value="60" onchange="markUnsaved('agriculture')"></td>
+                        <td>PG Records</td>
+                        <td><input type="text" class="input-field" data-field="agri_land_ownership_remarks" onchange="markUnsaved('agriculture')"></td>
+                    </tr>
+                    <tr>
+                        <td>Average land size per member (acres)</td>
+                        <td><input type="number" class="input-field" data-field="agri_land_size_men_baseline" step="0.1" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_land_size_women_baseline" step="0.1" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_land_size_men_current" step="0.1" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_land_size_women_current" step="0.1" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_land_size_men_target" value="2.5" step="0.1" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_land_size_women_target" value="1.8" step="0.1" onchange="markUnsaved('agriculture')"></td>
+                        <td>Survey</td>
+                        <td><input type="text" class="input-field" data-field="agri_land_size_remarks" onchange="markUnsaved('agriculture')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with decision-making power on crop selection</td>
+                        <td><input type="number" class="input-field" data-field="agri_crop_decision_men_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_crop_decision_women_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_crop_decision_men_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_crop_decision_women_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_crop_decision_men_target" value="70" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_crop_decision_women_target" value="65" onchange="markUnsaved('agriculture')"></td>
+                        <td>FGD</td>
+                        <td><input type="text" class="input-field" data-field="agri_crop_decision_remarks" onchange="markUnsaved('agriculture')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with control over agricultural income</td>
+                        <td><input type="number" class="input-field" data-field="agri_income_control_men_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_income_control_women_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_income_control_men_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_income_control_women_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_income_control_men_target" value="75" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_income_control_women_target" value="70" onchange="markUnsaved('agriculture')"></td>
+                        <td>HH Survey</td>
+                        <td><input type="text" class="input-field" data-field="agri_income_control_remarks" onchange="markUnsaved('agriculture')"></td>
+                    </tr>
+                    <tr>
+                        <td class="indicator-category" rowspan="3">Training & Capacity</td>
+                        <td>% trained in modern farming techniques</td>
+                        <td><input type="number" class="input-field" data-field="agri_training_men_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_training_women_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_training_men_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_training_women_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_training_men_target" value="85" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_training_women_target" value="80" onchange="markUnsaved('agriculture')"></td>
+                        <td>Training Records</td>
+                        <td><input type="text" class="input-field" data-field="agri_training_remarks" onchange="markUnsaved('agriculture')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with access to extension services</td>
+                        <td><input type="number" class="input-field" data-field="agri_extension_men_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_extension_women_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_extension_men_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_extension_women_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_extension_men_target" value="70" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_extension_women_target" value="70" onchange="markUnsaved('agriculture')"></td>
+                        <td>Service Records</td>
+                        <td><input type="text" class="input-field" data-field="agri_extension_remarks" onchange="markUnsaved('agriculture')"></td>
+                    </tr>
+                    <tr>
+                        <td>% participating in farmer demonstrations</td>
+                        <td><input type="number" class="input-field" data-field="agri_demo_men_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_demo_women_baseline" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_demo_men_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_demo_women_current" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_demo_men_target" value="60" onchange="markUnsaved('agriculture')"></td>
+                        <td><input type="number" class="input-field" data-field="agri_demo_women_target" value="65" onchange="markUnsaved('agriculture')"></td>
+                        <td>Event Records</td>
+                        <td><input type="text" class="input-field" data-field="agri_demo_remarks" onchange="markUnsaved('agriculture')"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Irrigation Theme -->
+        <div id="irrigation" class="tab-content">
+            <div class="theme-header">
+                <h2><span class="status-indicator status-unsaved" id="irrigation-status"></span>Irrigation Theme - Gender Integration Tracking</h2>
+                <div class="theme-actions">
+                    <button class="save-btn" onclick="saveThemeData('irrigation')">Save Data</button>
+                    <button class="load-btn" onclick="loadThemeData('irrigation')">Load Data</button>
+                    <button class="export-btn" onclick="exportThemeData('irrigation')">Export Excel</button>
+                </div>
+            </div>
+            <table class="excel-table" id="irrigation-table">
+                <thead>
+                    <tr>
+                        <th>Indicator Category</th>
+                        <th>Specific Indicator</th>
+                        <th>Baseline (Men)</th>
+                        <th>Baseline (Women)</th>
+                        <th>Current (Men)</th>
+                        <th>Current (Women)</th>
+                        <th>Target (Men)</th>
+                        <th>Target (Women)</th>
+                        <th>Data Source</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="indicator-category" rowspan="4">Water Access & Control</td>
+                        <td>% with access to irrigation facilities</td>
+                        <td><input type="number" class="input-field" data-field="irri_access_men_baseline" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_access_women_baseline" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_access_men_current" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_access_women_current" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_access_men_target" value="70" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_access_women_target" value="65" onchange="markUnsaved('irrigation')"></td>
+                        <td>Infrastructure Survey</td>
+                        <td><input type="text" class="input-field" data-field="irri_access_remarks" onchange="markUnsaved('irrigation')"></td>
+                    </tr>
+                    <tr>
+                        <td>% participating in water user groups</td>
+                        <td><input type="number" class="input-field" data-field="irri_wug_men_baseline" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_wug_women_baseline" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_wug_men_current" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_wug_women_current" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_wug_men_target" value="60" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_wug_women_target" value="70" onchange="markUnsaved('irrigation')"></td>
+                        <td>WUG Records</td>
+                        <td><input type="text" class="input-field" data-field="irri_wug_remarks" onchange="markUnsaved('irrigation')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with decision-making power in irrigation management</td>
+                        <td><input type="number" class="input-field" data-field="irri_decision_men_baseline" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_decision_women_baseline" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_decision_men_current" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_decision_women_current" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_decision_men_target" value="55" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_decision_women_target" value="60" onchange="markUnsaved('irrigation')"></td>
+                        <td>FGD</td>
+                        <td><input type="text" class="input-field" data-field="irri_decision_remarks" onchange="markUnsaved('irrigation')"></td>
+                    </tr>
+                    <tr>
+                        <td>% trained in water conservation techniques</td>
+                        <td><input type="number" class="input-field" data-field="irri_conservation_men_baseline" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_conservation_women_baseline" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_conservation_men_current" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_conservation_women_current" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_conservation_men_target" value="65" onchange="markUnsaved('irrigation')"></td>
+                        <td><input type="number" class="input-field" data-field="irri_conservation_women_target" value="70" onchange="markUnsaved('irrigation')"></td>
+                        <td>Training Records</td>
+                        <td><input type="text" class="input-field" data-field="irri_conservation_remarks" onchange="markUnsaved('irrigation')"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Similar structure for other themes - adding key ones -->
+        
+        <!-- Income Control Theme -->
+        <div id="income" class="tab-content">
+            <div class="theme-header">
+                <h2><span class="status-indicator status-unsaved" id="income-status"></span>Income Control Theme - Gender Integration Tracking</h2>
+                <div class="theme-actions">
+                    <button class="save-btn" onclick="saveThemeData('income')">Save Data</button>
+                    <button class="load-btn" onclick="loadThemeData('income')">Load Data</button>
+                    <button class="export-btn" onclick="exportThemeData('income')">Export Excel</button>
+                </div>
+            </div>
+            <table class="excel-table" id="income-table">
+                <thead>
+                    <tr>
+                        <th>Indicator Category</th>
+                        <th>Specific Indicator</th>
+                        <th>Baseline (Men)</th>
+                        <th>Baseline (Women)</th>
+                        <th>Current (Men)</th>
+                        <th>Current (Women)</th>
+                        <th>Target (Men)</th>
+                        <th>Target (Women)</th>
+                        <th>Data Source</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="indicator-category" rowspan="4">Income Generation</td>
+                        <td>Average monthly income (Rs)</td>
+                        <td><input type="number" class="input-field" data-field="income_monthly_men_baseline" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_monthly_women_baseline" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_monthly_men_current" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_monthly_women_current" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_monthly_men_target" value="8000" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_monthly_women_target" value="6000" onchange="markUnsaved('income')"></td>
+                        <td>Income Survey</td>
+                        <td><input type="text" class="input-field" data-field="income_monthly_remarks" onchange="markUnsaved('income')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with control over earned income</td>
+                        <td><input type="number" class="input-field" data-field="income_control_men_baseline" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_control_women_baseline" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_control_men_current" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_control_women_current" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_control_men_target" value="70" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_control_women_target" value="75" onchange="markUnsaved('income')"></td>
+                        <td>HH Survey</td>
+                        <td><input type="text" class="input-field" data-field="income_control_remarks" onchange="markUnsaved('income')"></td>
+                    </tr>
+                    <tr>
+                        <td>% participating in financial planning</td>
+                        <td><input type="number" class="input-field" data-field="income_planning_men_baseline" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_planning_women_baseline" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_planning_men_current" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_planning_women_current" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_planning_men_target" value="65" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_planning_women_target" value="70" onchange="markUnsaved('income')"></td>
+                        <td>FGD</td>
+                        <td><input type="text" class="input-field" data-field="income_planning_remarks" onchange="markUnsaved('income')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with separate bank accounts</td>
+                        <td><input type="number" class="input-field" data-field="income_banking_men_baseline" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_banking_women_baseline" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_banking_men_current" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_banking_women_current" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_banking_men_target" value="85" onchange="markUnsaved('income')"></td>
+                        <td><input type="number" class="input-field" data-field="income_banking_women_target" value="90" onchange="markUnsaved('income')"></td>
+                        <td>Bank Records</td>
+                        <td><input type="text" class="input-field" data-field="income_banking_remarks" onchange="markUnsaved('income')"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Asset Control Theme -->
+        <div id="assets" class="tab-content">
+            <div class="theme-header">
+                <h2><span class="status-indicator status-unsaved" id="assets-status"></span>Asset Control Theme - Gender Integration Tracking</h2>
+                <div class="theme-actions">
+                    <button class="save-btn" onclick="saveThemeData('assets')">Save Data</button>
+                    <button class="load-btn" onclick="loadThemeData('assets')">Load Data</button>
+                    <button class="export-btn" onclick="exportThemeData('assets')">Export Excel</button>
+                </div>
+            </div>
+            <table class="excel-table" id="assets-table">
+                <thead>
+                    <tr>
+                        <th>Indicator Category</th>
+                        <th>Specific Indicator</th>
+                        <th>Baseline (Men)</th>
+                        <th>Baseline (Women)</th>
+                        <th>Current (Men)</th>
+                        <th>Current (Women)</th>
+                        <th>Target (Men)</th>
+                        <th>Target (Women)</th>
+                        <th>Data Source</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="indicator-category" rowspan="4">Asset Ownership</td>
+                        <td>% with house ownership documents</td>
+                        <td><input type="number" class="input-field" data-field="asset_house_men_baseline" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_house_women_baseline" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_house_men_current" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_house_women_current" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_house_men_target" value="75" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_house_women_target" value="65" onchange="markUnsaved('assets')"></td>
+                        <td>Property Records</td>
+                        <td><input type="text" class="input-field" data-field="asset_house_remarks" onchange="markUnsaved('assets')"></td>
+                    </tr>
+                    <tr>
+                        <td>% owning productive assets (tools, equipment)</td>
+                        <td><input type="number" class="input-field" data-field="asset_productive_men_baseline" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_productive_women_baseline" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_productive_men_current" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_productive_women_current" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_productive_men_target" value="70" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_productive_women_target" value="60" onchange="markUnsaved('assets')"></td>
+                        <td>Asset Survey</td>
+                        <td><input type="text" class="input-field" data-field="asset_productive_remarks" onchange="markUnsaved('assets')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with control over asset disposal decisions</td>
+                        <td><input type="number" class="input-field" data-field="asset_disposal_men_baseline" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_disposal_women_baseline" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_disposal_men_current" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_disposal_women_current" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_disposal_men_target" value="60" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_disposal_women_target" value="65" onchange="markUnsaved('assets')"></td>
+                        <td>Decision Survey</td>
+                        <td><input type="text" class="input-field" data-field="asset_disposal_remarks" onchange="markUnsaved('assets')"></td>
+                    </tr>
+                    <tr>
+                        <td>Average value of assets owned (Rs)</td>
+                        <td><input type="number" class="input-field" data-field="asset_value_men_baseline" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_value_women_baseline" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_value_men_current" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_value_women_current" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_value_men_target" value="50000" onchange="markUnsaved('assets')"></td>
+                        <td><input type="number" class="input-field" data-field="asset_value_women_target" value="35000" onchange="markUnsaved('assets')"></td>
+                        <td>Valuation Survey</td>
+                        <td><input type="text" class="input-field" data-field="asset_value_remarks" onchange="markUnsaved('assets')"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Plantation Theme -->
+        <div id="plantation" class="tab-content">
+            <div class="theme-header">
+                <h2><span class="status-indicator status-unsaved" id="plantation-status"></span>Plantation Theme - Gender Integration Tracking</h2>
+                <div class="theme-actions">
+                    <button class="save-btn" onclick="saveThemeData('plantation')">Save Data</button>
+                    <button class="load-btn" onclick="loadThemeData('plantation')">Load Data</button>
+                    <button class="export-btn" onclick="exportThemeData('plantation')">Export Excel</button>
+                </div>
+            </div>
+            <table class="excel-table" id="plantation-table">
+                <thead>
+                    <tr>
+                        <th>Indicator Category</th>
+                        <th>Specific Indicator</th>
+                        <th>Baseline (Men)</th>
+                        <th>Baseline (Women)</th>
+                        <th>Current (Men)</th>
+                        <th>Current (Women)</th>
+                        <th>Target (Men)</th>
+                        <th>Target (Women)</th>
+                        <th>Data Source</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="indicator-category" rowspan="3">Tree Plantation</td>
+                        <td>% participating in plantation activities</td>
+                        <td><input type="number" class="input-field" data-field="plant_participation_men_baseline" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_participation_women_baseline" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_participation_men_current" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_participation_women_current" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_participation_men_target" value="60" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_participation_women_target" value="70" onchange="markUnsaved('plantation')"></td>
+                        <td>Activity Records</td>
+                        <td><input type="text" class="input-field" data-field="plant_participation_remarks" onchange="markUnsaved('plantation')"></td>
+                    </tr>
+                    <tr>
+                        <td>Average trees planted per member</td>
+                        <td><input type="number" class="input-field" data-field="plant_trees_men_baseline" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_trees_women_baseline" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_trees_men_current" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_trees_women_current" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_trees_men_target" value="15" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_trees_women_target" value="12" onchange="markUnsaved('plantation')"></td>
+                        <td>Plantation Survey</td>
+                        <td><input type="text" class="input-field" data-field="plant_trees_remarks" onchange="markUnsaved('plantation')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with control over forest produce income</td>
+                        <td><input type="number" class="input-field" data-field="plant_income_men_baseline" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_income_women_baseline" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_income_men_current" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_income_women_current" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_income_men_target" value="50" onchange="markUnsaved('plantation')"></td>
+                        <td><input type="number" class="input-field" data-field="plant_income_women_target" value="60" onchange="markUnsaved('plantation')"></td>
+                        <td>Income Survey</td>
+                        <td><input type="text" class="input-field" data-field="plant_income_remarks" onchange="markUnsaved('plantation')"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FPC Theme -->
+        <div id="fpc" class="tab-content">
+            <div class="theme-header">
+                <h2><span class="status-indicator status-unsaved" id="fpc-status"></span>FPC Theme - Gender Integration Tracking</h2>
+                <div class="theme-actions">
+                    <button class="save-btn" onclick="saveThemeData('fpc')">Save Data</button>
+                    <button class="load-btn" onclick="loadThemeData('fpc')">Load Data</button>
+                    <button class="export-btn" onclick="exportThemeData('fpc')">Export Excel</button>
+                </div>
+            </div>
+            <table class="excel-table" id="fpc-table">
+                <thead>
+                    <tr>
+                        <th>Indicator Category</th>
+                        <th>Specific Indicator</th>
+                        <th>Baseline (Men)</th>
+                        <th>Baseline (Women)</th>
+                        <th>Current (Men)</th>
+                        <th>Current (Women)</th>
+                        <th>Target (Men)</th>
+                        <th>Target (Women)</th>
+                        <th>Data Source</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="indicator-category" rowspan="4">FPC Participation</td>
+                        <td>% membership in FPC</td>
+                        <td><input type="number" class="input-field" data-field="fpc_membership_men_baseline" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_membership_women_baseline" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_membership_men_current" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_membership_women_current" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_membership_men_target" value="70" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_membership_women_target" value="65" onchange="markUnsaved('fpc')"></td>
+                        <td>FPC Records</td>
+                        <td><input type="text" class="input-field" data-field="fpc_membership_remarks" onchange="markUnsaved('fpc')"></td>
+                    </tr>
+                    <tr>
+                        <td>% in FPC leadership positions</td>
+                        <td><input type="number" class="input-field" data-field="fpc_leadership_men_baseline" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_leadership_women_baseline" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_leadership_men_current" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_leadership_women_current" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_leadership_men_target" value="45" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_leadership_women_target" value="55" onchange="markUnsaved('fpc')"></td>
+                        <td>Leadership Records</td>
+                        <td><input type="text" class="input-field" data-field="fpc_leadership_remarks" onchange="markUnsaved('fpc')"></td>
+                    </tr>
+                    <tr>
+                        <td>% benefiting from FPC services</td>
+                        <td><input type="number" class="input-field" data-field="fpc_services_men_baseline" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_services_women_baseline" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_services_men_current" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_services_women_current" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_services_men_target" value="75" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_services_women_target" value="70" onchange="markUnsaved('fpc')"></td>
+                        <td>Service Records</td>
+                        <td><input type="text" class="input-field" data-field="fpc_services_remarks" onchange="markUnsaved('fpc')"></td>
+                    </tr>
+                    <tr>
+                        <td>% receiving dividends from FPC</td>
+                        <td><input type="number" class="input-field" data-field="fpc_dividends_men_baseline" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_dividends_women_baseline" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_dividends_men_current" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_dividends_women_current" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_dividends_men_target" value="60" onchange="markUnsaved('fpc')"></td>
+                        <td><input type="number" class="input-field" data-field="fpc_dividends_women_target" value="55" onchange="markUnsaved('fpc')"></td>
+                        <td>Financial Records</td>
+                        <td><input type="text" class="input-field" data-field="fpc_dividends_remarks" onchange="markUnsaved('fpc')"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PG Theme -->
+        <div id="pg" class="tab-content">
+            <div class="theme-header">
+                <h2><span class="status-indicator status-unsaved" id="pg-status"></span>PG Theme - Gender Integration Tracking</h2>
+                <div class="theme-actions">
+                    <button class="save-btn" onclick="saveThemeData('pg')">Save Data</button>
+                    <button class="load-btn" onclick="loadThemeData('pg')">Load Data</button>
+                    <button class="export-btn" onclick="exportThemeData('pg')">Export Excel</button>
+                </div>
+            </div>
+            <table class="excel-table" id="pg-table">
+                <thead>
+                    <tr>
+                        <th>Indicator Category</th>
+                        <th>Specific Indicator</th>
+                        <th>Baseline (Men)</th>
+                        <th>Baseline (Women)</th>
+                        <th>Current (Men)</th>
+                        <th>Current (Women)</th>
+                        <th>Target (Men)</th>
+                        <th>Target (Women)</th>
+                        <th>Data Source</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="indicator-category" rowspan="4">PG Management</td>
+                        <td>% active membership in PG</td>
+                        <td><input type="number" class="input-field" data-field="pg_membership_men_baseline" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_membership_women_baseline" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_membership_men_current" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_membership_women_current" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_membership_men_target" value="45" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_membership_women_target" value="55" onchange="markUnsaved('pg')"></td>
+                        <td>PG Records</td>
+                        <td><input type="text" class="input-field" data-field="pg_membership_remarks" onchange="markUnsaved('pg')"></td>
+                    </tr>
+                    <tr>
+                        <td>% in PG executive positions</td>
+                        <td><input type="number" class="input-field" data-field="pg_executive_men_baseline" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_executive_women_baseline" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_executive_men_current" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_executive_women_current" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_executive_men_target" value="40" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_executive_women_target" value="60" onchange="markUnsaved('pg')"></td>
+                        <td>Executive Records</td>
+                        <td><input type="text" class="input-field" data-field="pg_executive_remarks" onchange="markUnsaved('pg')"></td>
+                    </tr>
+                    <tr>
+                        <td>% regular attendance in PG meetings</td>
+                        <td><input type="number" class="input-field" data-field="pg_attendance_men_baseline" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_attendance_women_baseline" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_attendance_men_current" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_attendance_women_current" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_attendance_men_target" value="80" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_attendance_women_target" value="85" onchange="markUnsaved('pg')"></td>
+                        <td>Meeting Records</td>
+                        <td><input type="text" class="input-field" data-field="pg_attendance_remarks" onchange="markUnsaved('pg')"></td>
+                    </tr>
+                    <tr>
+                        <td>Average savings per member (Rs/month)</td>
+                        <td><input type="number" class="input-field" data-field="pg_savings_men_baseline" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_savings_women_baseline" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_savings_men_current" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_savings_women_current" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_savings_men_target" value="500" onchange="markUnsaved('pg')"></td>
+                        <td><input type="number" class="input-field" data-field="pg_savings_women_target" value="400" onchange="markUnsaved('pg')"></td>
+                        <td>Financial Records</td>
+                        <td><input type="text" class="input-field" data-field="pg_savings_remarks" onchange="markUnsaved('pg')"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Livestock Theme -->
+        <div id="livestock" class="tab-content">
+            <div class="theme-header">
+                <h2><span class="status-indicator status-unsaved" id="livestock-status"></span>Livestock Theme - Gender Integration Tracking</h2>
+                <div class="theme-actions">
+                    <button class="save-btn" onclick="saveThemeData('livestock')">Save Data</button>
+                    <button class="load-btn" onclick="loadThemeData('livestock')">Load Data</button>
+                    <button class="export-btn" onclick="exportThemeData('livestock')">Export Excel</button>
+                </div>
+            </div>
+            <table class="excel-table" id="livestock-table">
+                <thead>
+                    <tr>
+                        <th>Indicator Category</th>
+                        <th>Specific Indicator</th>
+                        <th>Baseline (Men)</th>
+                        <th>Baseline (Women)</th>
+                        <th>Current (Men)</th>
+                        <th>Current (Women)</th>
+                        <th>Target (Men)</th>
+                        <th>Target (Women)</th>
+                        <th>Data Source</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="indicator-category" rowspan="4">Livestock Ownership</td>
+                        <td>Average number of cattle per member</td>
+                        <td><input type="number" class="input-field" data-field="livestock_cattle_men_baseline" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_cattle_women_baseline" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_cattle_men_current" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_cattle_women_current" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_cattle_men_target" value="3" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_cattle_women_target" value="2" onchange="markUnsaved('livestock')"></td>
+                        <td>Livestock Census</td>
+                        <td><input type="text" class="input-field" data-field="livestock_cattle_remarks" onchange="markUnsaved('livestock')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with goat rearing</td>
+                        <td><input type="number" class="input-field" data-field="livestock_goat_men_baseline" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_goat_women_baseline" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_goat_men_current" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_goat_women_current" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_goat_men_target" value="45" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_goat_women_target" value="55" onchange="markUnsaved('livestock')"></td>
+                        <td>PG Records</td>
+                        <td><input type="text" class="input-field" data-field="livestock_goat_remarks" onchange="markUnsaved('livestock')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with poultry farming</td>
+                        <td><input type="number" class="input-field" data-field="livestock_poultry_men_baseline" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_poultry_women_baseline" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_poultry_men_current" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_poultry_women_current" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_poultry_men_target" value="30" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_poultry_women_target" value="70" onchange="markUnsaved('livestock')"></td>
+                        <td>Survey</td>
+                        <td><input type="text" class="input-field" data-field="livestock_poultry_remarks" onchange="markUnsaved('livestock')"></td>
+                    </tr>
+                    <tr>
+                        <td>% controlling livestock income</td>
+                        <td><input type="number" class="input-field" data-field="livestock_income_men_baseline" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_income_women_baseline" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_income_men_current" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_income_women_current" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_income_men_target" value="60" onchange="markUnsaved('livestock')"></td>
+                        <td><input type="number" class="input-field" data-field="livestock_income_women_target" value="75" onchange="markUnsaved('livestock')"></td>
+                        <td>FGD</td>
+                        <td><input type="text" class="input-field" data-field="livestock_income_remarks" onchange="markUnsaved('livestock')"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Value Chain Theme -->
+        <div id="valuechain" class="tab-content">
+            <div class="theme-header">
+                <h2><span class="status-indicator status-unsaved" id="valuechain-status"></span>Value Chain Theme - Gender Integration Tracking</h2>
+                <div class="theme-actions">
+                    <button class="save-btn" onclick="saveThemeData('valuechain')">Save Data</button>
+                    <button class="load-btn" onclick="loadThemeData('valuechain')">Load Data</button>
+                    <button class="export-btn" onclick="exportThemeData('valuechain')">Export Excel</button>
+                </div>
+            </div>
+            <table class="excel-table" id="valuechain-table">
+                <thead>
+                    <tr>
+                        <th>Indicator Category</th>
+                        <th>Specific Indicator</th>
+                        <th>Baseline (Men)</th>
+                        <th>Baseline (Women)</th>
+                        <th>Current (Men)</th>
+                        <th>Current (Women)</th>
+                        <th>Target (Men)</th>
+                        <th>Target (Women)</th>
+                        <th>Data Source</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="indicator-category" rowspan="4">Market Participation</td>
+                        <td>% participating in collective marketing</td>
+                        <td><input type="number" class="input-field" data-field="vc_marketing_men_baseline" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_marketing_women_baseline" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_marketing_men_current" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_marketing_women_current" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_marketing_men_target" value="60" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_marketing_women_target" value="65" onchange="markUnsaved('valuechain')"></td>
+                        <td>Marketing Records</td>
+                        <td><input type="text" class="input-field" data-field="vc_marketing_remarks" onchange="markUnsaved('valuechain')"></td>
+                    </tr>
+                    <tr>
+                        <td>% involved in value addition activities</td>
+                        <td><input type="number" class="input-field" data-field="vc_value_add_men_baseline" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_value_add_women_baseline" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_value_add_men_current" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_value_add_women_current" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_value_add_men_target" value="40" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_value_add_women_target" value="70" onchange="markUnsaved('valuechain')"></td>
+                        <td>Activity Records</td>
+                        <td><input type="text" class="input-field" data-field="vc_value_add_remarks" onchange="markUnsaved('valuechain')"></td>
+                    </tr>
+                    <tr>
+                        <td>% with access to market information</td>
+                        <td><input type="number" class="input-field" data-field="vc_market_info_men_baseline" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_market_info_women_baseline" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_market_info_men_current" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_market_info_women_current" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_market_info_men_target" value="75" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_market_info_women_target" value="70" onchange="markUnsaved('valuechain')"></td>
+                        <td>Survey</td>
+                        <td><input type="text" class="input-field" data-field="vc_market_info_remarks" onchange="markUnsaved('valuechain')"></td>
+                    </tr>
+                    <tr>
+                        <td>Average income from value chain (Rs/month)</td>
+                        <td><input type="number" class="input-field" data-field="vc_income_men_baseline" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_income_women_baseline" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_income_men_current" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_income_women_current" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_income_men_target" value="5000" onchange="markUnsaved('valuechain')"></td>
+                        <td><input type="number" class="input-field" data-field="vc_income_women_target" value="4000" onchange="markUnsaved('valuechain')"></td>
+                        <td>Income Survey</td>
+                        <td><input type="text" class="input-field" data-field="vc_income_remarks" onchange="markUnsaved('valuechain')"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Governance Theme -->
+        <div id="governance" class="tab-content">
+            <div class="theme-header">
+                <h2><span class="status-indicator status-unsaved" id="governance-status"></span>Governance Theme - Gender Integration Tracking</h2>
+                <div class="theme-actions">
+                    <button class="save-btn" onclick="saveThemeData('governance')">Save Data</button>
+                    <button class="load-btn" onclick="loadThemeData('governance')">Load Data</button>
+                    <button class="export-btn" onclick="exportThemeData('governance')">Export Excel</button>
+                </div>
+            </div>
+            <table class="excel-table" id="governance-table">
+                <thead>
+                    <tr>
+                        <th>Indicator Category</th>
+                        <th>Specific Indicator</th>
+                        <th>Baseline (Men)</th>
+                        <th>Baseline (Women)</th>
+                        <th>Current (Men)</th>
+                        <th>Current (Women)</th>
+                        <th>Target (Men)</th>
+                        <th>Target (Women)</th>
+                        <th>Data Source</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="indicator-category" rowspan="4">Leadership & Participation</td>
+                        <td>% in executive positions</td>
+                        <td><input type="number" class="input-field" data-field="gov_exec_men_baseline" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_exec_women_baseline" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_exec_men_current" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_exec_women_current" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_exec_men_target" value="40" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_exec_women_target" value="60" onchange="markUnsaved('governance')"></td>
+                        <td>PG Records</td>
+                        <td><input type="text" class="input-field" data-field="gov_exec_remarks" onchange="markUnsaved('governance')"></td>
+                    </tr>
+                    <tr>
+                        <td>% participating in meetings</td>
+                        <td><input type="number" class="input-field" data-field="gov_meetings_men_baseline" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_meetings_women_baseline" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_meetings_men_current" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_meetings_women_current" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_meetings_men_target" value="80" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_meetings_women_target" value="85" onchange="markUnsaved('governance')"></td>
+                        <td>Meeting Records</td>
+                        <td><input type="text" class="input-field" data-field="gov_meetings_remarks" onchange="markUnsaved('governance')"></td>
+                    </tr>
+                    <tr>
+                        <td>% speaking in meetings</td>
+                        <td><input type="number" class="input-field" data-field="gov_speaking_men_baseline" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_speaking_women_baseline" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_speaking_men_current" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_speaking_women_current" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_speaking_men_target" value="65" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_speaking_women_target" value="70" onchange="markUnsaved('governance')"></td>
+                        <td>Meeting Observation</td>
+                        <td><input type="text" class="input-field" data-field="gov_speaking_remarks" onchange="markUnsaved('governance')"></td>
+                    </tr>
+                    <tr>
+                        <td>% involved in financial decisions</td>
+                        <td><input type="number" class="input-field" data-field="gov_financial_men_baseline" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_financial_women_baseline" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_financial_men_current" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_financial_women_current" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_financial_men_target" value="50" onchange="markUnsaved('governance')"></td>
+                        <td><input type="number" class="input-field" data-field="gov_financial_women_target" value="70" onchange="markUnsaved('governance')"></td>
+                        <td>Financial Records</td>
+                        <td><input type="text" class="input-field" data-field="gov_financial_remarks" onchange="markUnsaved('governance')"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Database Management Tab -->
+        <div id="database" class="tab-content">
+            <h2>Database Management</h2>
+            
+            <div class="database-section">
+                <h3>Saved Records</h3>
+                <div class="saved-records" id="savedRecords">
+                    <div class="record-item">
+                        <span>No saved records found. Save data from any theme to see records here.</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="database-section">
+                <h3>Database Actions</h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <button class="export-btn" onclick="exportAllData()">Export All Data to Excel</button>
+                    <button class="save-btn" onclick="backupDatabase()">Backup Database</button>
+                    <button class="load-btn" onclick="importDatabase()">Import Database</button>
+                    <button class="btn-delete" style="padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 12px;" onclick="clearDatabase()">Clear All Data</button>
+                </div>
+            </div>
+            
+            <div class="database-section">
+                <h3>Data Statistics</h3>
+                <div class="summary-stats">
+                    <div class="stat-card">
+                        <p class="stat-number" id="totalRecords">0</p>
+                        <p class="stat-label">Total Saved Records</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-number" id="lastSaved">Never</p>
+                        <p class="stat-label">Last Saved</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-number" id="dataSize">0 KB</p>
+                        <p class="stat-label">Database Size</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Dashboard -->
+        <div id="summary" class="tab-content">
+            <h2>Summary Dashboard</h2>
+            
+            <div class="summary-stats">
+                <div class="stat-card">
+                    <p class="stat-number">70</p>
+                    <p class="stat-label">Total Gender Indicators</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-number">10</p>
+                    <p class="stat-label">Themes Covered</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-number">164</p>
+                    <p class="stat-label">Total PG Members</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-number" id="completionRate">0%</p>
+                    <p class="stat-label">Data Completion Rate</p>
+                </div>
+            </div>
+            
+            <h3>Enhanced MIS Features:</h3>
+            <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; margin: 20px 0;">
+                <ul style="list-style-type: disc; padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Comprehensive Theme Coverage:</strong> Agriculture, Livestock, Value Chain, Governance, Irrigation, Plantation, FPC, PG, Income Control, and Asset Control</li>
+                    <li><strong>Advanced Database System:</strong> Save, load, edit, and export data with full persistence</li>
+                    <li><strong>Theme-wise Data Management:</strong> Individual save/load/export for each theme with status tracking</li>
+                    <li><strong>Excel Export Functionality:</strong> Export individual themes or complete database to Excel format</li>
+                    <li><strong>Real-time Status Tracking:</strong> Visual indicators for saved/unsaved/modified data</li>
+                    <li><strong>Data Backup & Recovery:</strong> Full database backup and import capabilities</li>
+                    <li><strong>Gender-Disaggregated Tracking:</strong> All 70+ indicators track separate data for men and women</li>
+                    <li><strong>Progressive Web App Features:</strong> Works offline once loaded, responsive design</li>
+                </ul>
+            </div>
+            
+            <h3>Data Collection Timeline Integration:</h3>
+            <table class="excel-table" style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Frequency</th>
+                        <th>Responsible Party</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Baseline Data Entry</td>
+                        <td>One-time</td>
+                        <td>Gender Anchors + Staff</td>
+                        <td><span id="baselineStatus" class="status-indicator status-unsaved"></span> Pending</td>
+                    </tr>
+                    <tr>
+                        <td>Monthly MIS Updates</td>
+                        <td>Monthly</td>
+                        <td>PG Members + Staff</td>
+                        <td><span id="monthlyStatus" class="status-indicator status-unsaved"></span> Ongoing</td>
+                    </tr>
+                    <tr>
+                        <td>Quarterly Review</td>
+                        <td>Quarterly</td>
+                        <td>Block Team</td>
+                        <td><span id="quarterlyStatus" class="status-indicator status-unsaved"></span> Scheduled</td>
+                    </tr>
+                    <tr>
+                        <td>Annual Assessment</td>
+                        <td>Yearly</td>
+                        <td>All Stakeholders</td>
+                        <td><span id="annualStatus" class="status-indicator status-unsaved"></span> July 2026</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        // Database management system
+        let genderMISDatabase = {};
+        let themeStatuses = {};
+        
+        // Initialize database
+        function initializeDatabase() {
+            const savedData = JSON.parse(localStorage.getItem('genderMISData') || '{}');
+            genderMISDatabase = savedData;
+            updateDatabaseStats();
+            loadSavedRecords();
+        }
+        
+        // Mark theme as unsaved
+        function markUnsaved(theme) {
+            themeStatuses[theme] = 'modified';
+            updateStatusIndicator(theme, 'modified');
+        }
+        
+        // Update status indicator
+        function updateStatusIndicator(theme, status) {
+            const indicator = document.getElementById(`${theme}-status`);
+            if (indicator) {
+                indicator.className = `status-indicator status-${status}`;
+            }
+        }
+        
+        // Save theme data
+        function saveThemeData(theme) {
+            const themeData = {};
+            const inputs = document.querySelectorAll(`#${theme} .input-field`);
+            
+            inputs.forEach(input => {
+                const field = input.getAttribute('data-field');
+                if (field) {
+                    themeData[field] = input.value;
+                }
+            });
+            
+            const timestamp = new Date().toISOString();
+            genderMISDatabase[theme] = {
+                data: themeData,
+                lastSaved: timestamp,
+                theme: theme
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('genderMISData', JSON.stringify(genderMISDatabase));
+            
+            themeStatuses[theme] = 'saved';
+            updateStatusIndicator(theme, 'saved');
+            
+            showNotification(`${theme.charAt(0).toUpperCase() + theme.slice(1)} data saved successfully!`, 'success');
+            
+            updateDatabaseStats();
+            loadSavedRecords();
+        }
+        
+        // Load theme data
+        function loadThemeData(theme) {
+            if (!genderMISDatabase[theme]) {
+                showNotification(`No saved data found for ${theme}`, 'error');
+                return;
+            }
+            
+            const themeData = genderMISDatabase[theme].data;
+            const inputs = document.querySelectorAll(`#${theme} .input-field`);
+            
+            inputs.forEach(input => {
+                const field = input.getAttribute('data-field');
+                if (field && themeData[field] !== undefined) {
+                    input.value = themeData[field];
+                }
+            });
+            
+            themeStatuses[theme] = 'saved';
+            updateStatusIndicator(theme, 'saved');
+            
+            showNotification(`${theme.charAt(0).toUpperCase() + theme.slice(1)} data loaded successfully!`, 'success');
+        }
+        
+        // Export theme data to Excel
+        function exportThemeData(theme) {
+            if (!genderMISDatabase[theme]) {
+                showNotification(`No saved data found for ${theme}. Please save data first.`, 'error');
+                return;
+            }
+            
+            const themeData = genderMISDatabase[theme].data;
+            let csvContent = "Field,Value\n";
+            
+            Object.keys(themeData).forEach(key => {
+                csvContent += `"${key}","${themeData[key]}"\n`;
+            });
+            
+            downloadCSV(csvContent, `${theme}_gender_data.csv`);
+            showNotification(`${theme.charAt(0).toUpperCase() + theme.slice(1)} data exported successfully!`, 'success');
+        }
+        
+        // Export all data
+        function exportAllData() {
+            if (Object.keys(genderMISDatabase).length === 0) {
+                showNotification('No data available to export. Please save some data first.', 'error');
+                return;
+            }
+            
+            let csvContent = "Theme,Indicator,Field,Value,Last Saved\n";
+            
+            Object.keys(genderMISDatabase).forEach(theme => {
+                const themeInfo = genderMISDatabase[theme];
+                Object.keys(themeInfo.data).forEach(field => {
+                    csvContent += `"${theme}","${field.split('_').join(' ')}","${field}","${themeInfo.data[field]}","${themeInfo.lastSaved}"\n`;
+                });
+            });
+            
+            downloadCSV(csvContent, 'complete_gender_mis_data.csv');
+            showNotification('Complete database exported successfully!', 'success');
+        }
+        
+        // Backup database
+        function backupDatabase() {
+            const backupData = {
+                database: genderMISDatabase,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const jsonContent = JSON.stringify(backupData, null, 2);
+            const blob = new Blob([jsonContent], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `gender_mis_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('Database backup created successfully!', 'success');
+        }
+        
+        // Import database
+        function importDatabase() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const backupData = JSON.parse(e.target.result);
+                            if (backupData.database) {
+                                genderMISDatabase = backupData.database;
+                                localStorage.setItem('genderMISData', JSON.stringify(genderMISDatabase));
+                                updateDatabaseStats();
+                                loadSavedRecords();
+                                showNotification('Database imported successfully!', 'success');
+                            } else {
+                                showNotification('Invalid backup file format.', 'error');
+                            }
+                        } catch (error) {
+                            showNotification('Error importing database: ' + error.message, 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+        
+        // Clear database
+        function clearDatabase() {
+            if (confirm('Are you sure you want to clear all saved data? This action cannot be undone.')) {
+                genderMISDatabase = {};
+                localStorage.removeItem('genderMISData');
+                themeStatuses = {};
+                
+                // Reset all status indicators
+                const themes = ['agriculture', 'livestock', 'valuechain', 'governance', 'irrigation', 'plantation', 'fpc', 'pg', 'income', 'assets'];
+                themes.forEach(theme => {
+                    updateStatusIndicator(theme, 'unsaved');
+                });
+                
+                updateDatabaseStats();
+                loadSavedRecords();
+                showNotification('Database cleared successfully!', 'success');
+            }
+        }
+        
+        // Load saved records display
+        function loadSavedRecords() {
+            const container = document.getElementById('savedRecords');
+            const themes = Object.keys(genderMISDatabase);
+            
+            if (themes.length === 0) {
+                container.innerHTML = '<div class="record-item"><span>No saved records found. Save data from any theme to see records here.</span></div>';
+                return;
+            }
+            
+            let recordsHTML = '';
+            themes.forEach(theme => {
+                const record = genderMISDatabase[theme];
+                const recordCount = Object.keys(record.data).length;
+                const lastSaved = new Date(record.lastSaved).toLocaleString();
+                
+                recordsHTML += `
+                    <div class="record-item">
+                        <div>
+                            <strong>${theme.charAt(0).toUpperCase() + theme.slice(1)}</strong><br>
+                            <small>${recordCount} fields • Saved: ${lastSaved}</small>
+                        </div>
+                        <div class="record-actions">
+                            <button class="btn-small btn-edit" onclick="loadAndSwitchTheme('${theme}')">Load & Edit</button>
+                            <button class="btn-small btn-delete" onclick="deleteThemeRecord('${theme}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = recordsHTML;
+        }
+        
+        // Load theme and switch to it
+        function loadAndSwitchTheme(theme) {
+            // Switch to the theme tab
+            const tabButton = document.querySelector(`[onclick="openTab(event, '${theme}')"]`);
+            if (tabButton) {
+                tabButton.click();
+            }
+            
+            // Load the data
+            setTimeout(() => {
+                loadThemeData(theme);
+            }, 100);
+        }
+        
+        // Delete theme record
+        function deleteThemeRecord(theme) {
+            if (confirm(`Are you sure you want to delete the saved data for ${theme}?`)) {
+                delete genderMISDatabase[theme];
+                localStorage.setItem('genderMISData', JSON.stringify(genderMISDatabase));
+                
+                updateStatusIndicator(theme, 'unsaved');
+                themeStatuses[theme] = 'unsaved';
+                
+                updateDatabaseStats();
+                loadSavedRecords();
+                showNotification(`${theme.charAt(0).toUpperCase() + theme.slice(1)} data deleted successfully!`, 'success');
+            }
+        }
+        
+        // Update database statistics
+        function updateDatabaseStats() {
+            const totalRecords = Object.keys(genderMISDatabase).length;
+            const lastSavedTimes = Object.values(genderMISDatabase).map(record => new Date(record.lastSaved));
+            const lastSaved = lastSavedTimes.length > 0 ? 
+                new Date(Math.max(...lastSavedTimes)).toLocaleString() : 'Never';
+            
+            const dataSize = new Blob([JSON.stringify(genderMISDatabase)]).size;
+            const dataSizeKB = Math.round(dataSize / 1024 * 100) / 100;
+            
+            document.getElementById('totalRecords').textContent = totalRecords;
+            document.getElementById('lastSaved').textContent = lastSaved;
+            document.getElementById('dataSize').textContent = `${dataSizeKB} KB`;
+            
+            // Calculate completion rate
+            const totalFields = 70 * 9; // 70 indicators × 9 fields each (roughly)
+            let completedFields = 0;
+            Object.values(genderMISDatabase).forEach(record => {
+                Object.values(record.data).forEach(value => {
+                    if (value && value.toString().trim() !== '') {
+                        completedFields++;
+                    }
+                });
+            });
+            
+            const completionRate = totalFields > 0 ? Math.round((completedFields / totalFields) * 100) : 0;
+            document.getElementById('completionRate').textContent = `${completionRate}%`;
+        }
+        
+        // Download CSV helper function
+        function downloadCSV(csvContent, filename) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Tab switching function
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDatabase();
+            
+            // Initialize all theme statuses as unsaved
+            const themes = ['agriculture', 'livestock', 'valuechain', 'governance', 'irrigation', 'plantation', 'fpc', 'pg', 'income', 'assets'];
+            themes.forEach(theme => {
+                themeStatuses[theme] = 'unsaved';
+                updateStatusIndicator(theme, 'unsaved');
+            });
+            
+            // Update status for saved themes
+            Object.keys(genderMISDatabase).forEach(theme => {
+                themeStatuses[theme] = 'saved';
+                updateStatusIndicator(theme, 'saved');
+            });
+        });
+        
+        // Auto-save functionality every 30 seconds for unsaved changes
+        setInterval(() => {
+            Object.keys(themeStatuses).forEach(theme => {
+                if (themeStatuses[theme] === 'modified') {
+                    // Auto-save modified data
+                    saveThemeData(theme);
+                }
+            });
+        }, 30000); // 30 seconds
+    </script>
+</body>
+</html>
+            
